@@ -8,7 +8,7 @@ TIMEOUT_DURATION="60s"
 PRIVATE_KEY="oMTRzLZs9ktLtn51f1qta9QVVDcibyiWFQA8xmccXs0Ju36ThIC09IQCKlXaKAnKh/FLe6I2Ja4q3rfw07TrVA=="
 NUKLAI_RPC_URL="http://api-devnet.nuklaivm-dev.net:9650/ext/bc/W3kZDK2seL6J1zqbVtyBgP1xz4QzzZSueXWyHU87Yyd4QhMXx"
 RECIPIENT="nuklai1qq69cgkqp3hf8e3qmx7qxrls909xlelg8mf8fnr8rwjjqptwela45uzqm50"
-AMOUNT="1"
+AMOUNT="0.000001"
 
 echo "$(date "+%Y-%m-%d %H:%M:%S") - Script started." >> "$LOGFILE"
 

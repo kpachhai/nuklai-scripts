@@ -23,7 +23,7 @@ const (
 	defaultNuklaiRPCURL = "http://api-devnet.nuklaivm-dev.net:9650/ext/bc/W3kZDK2seL6J1zqbVtyBgP1xz4QzzZSueXWyHU87Yyd4QhMXx"
 	defaultRecipient    = "nuklai1qq69cgkqp3hf8e3qmx7qxrls909xlelg8mf8fnr8rwjjqptwela45uzqm50"
 	defaultAmount       = "0.0001"
-	defaultPrivateKey   = "oMTRzLZs9ktLtn51f1qta9QVVDcibyiWFQA8xmccXs0Ju36ThIC09IQCKlXaKAnKh/FLe6I2Ja4q3rfw07TrVA=="
+	defaultPrivateKey   = "Mjsdj07tXw2p2pMHGwNPLc6dLSJpLBcvPLJSpk3fr9AbBX3jICl8Ka0MH1ieohaGnPGTjYjJ+9cNZ0gyPb8vpw=="
 )
 
 func main() {

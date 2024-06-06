@@ -8,6 +8,7 @@ import (
 	"os"
 
 	"github.com/ava-labs/avalanchego/ids"
+	"github.com/ava-labs/hypersdk/chain"
 	"github.com/ava-labs/hypersdk/codec"
 	"github.com/ava-labs/hypersdk/crypto/ed25519"
 	"github.com/ava-labs/hypersdk/pubsub"
@@ -84,7 +85,7 @@ func transfer(ctx context.Context, cli *rpc.JSONRPCClient, ncli *nrpc.JSONRPCCli
 
 	// Get asset ID
 	assetID := ids.Empty // Assuming NAI is the native asset
-	_, _, decimals, _, _, _, _, err := ncli.Asset(ctx, assetID, true)
+	_, _, decimals, _, _, _, err := ncli.Asset(ctx, assetID, true)
 	if err != nil {
 		return fmt.Errorf("failed to get asset info: %w", err)
 	}
@@ -120,12 +121,12 @@ func transfer(ctx context.Context, cli *rpc.JSONRPCClient, ncli *nrpc.JSONRPCCli
 	if err != nil {
 		return fmt.Errorf("failed to initialize parser: %w", err)
 	}
-	_, tx, maxFee, err := cli.GenerateTransaction(ctx, parser, nil, &actions.Transfer{
+	_, tx, maxFee, err := cli.GenerateTransaction(ctx, parser, []chain.Action{&actions.Transfer{
 		To:    to,
 		Asset: assetID,
 		Value: value,
 		Memo:  nil,
-	}, factory)
+	}}, factory)
 	if err != nil {
 		return fmt.Errorf("unable to generate transaction: %w", err)
 	}
@@ -145,7 +146,7 @@ func transfer(ctx context.Context, cli *rpc.JSONRPCClient, ncli *nrpc.JSONRPCCli
 		return fmt.Errorf("transaction failed: %w", dErr)
 	}
 	if !result.Success {
-		return fmt.Errorf("transaction failed on-chain: %s", result.Output)
+		return fmt.Errorf("transaction failed on-chain: %s", result.Outputs[0])
 	}
 	return nil
 }

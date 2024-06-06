@@ -5,7 +5,7 @@
 rm -rf .nuklai-cli
 
 TMPDIR=/tmp/nuklaivm-deploy
-CLUSTER=nuklai-1717597008
+CLUSTER=nuklai-1717707297
 
 # Import cli
 $TMPDIR/nuklai-cli chain import-cli $HOME/.avalanche-cli/nodes/inventories/$CLUSTER/clusterInfo.yaml
@@ -28,13 +28,13 @@ done
 $TMPDIR/nuklai-cli key set
 
 # Transfer some NAI to the validators
-for i in {1..3}; do
+for i in {1..2}; do
     echo "Executing transfer action $i"
     $TMPDIR/nuklai-cli action transfer
 done
 
 # Register the validators
-for i in {1..2}; do
+for i in {1..1}; do
     echo "Registering the validator $i"
     $TMPDIR/nuklai-cli key set
     $TMPDIR/nuklai-cli action register-validator-stake manual
@@ -42,7 +42,7 @@ done
 
 # Delegate user stake
 $TMPDIR/nuklai-cli key set
-for i in {1..2}; do
+for i in {1..1}; do
     echo "Delegating to the validator $i"
     $TMPDIR/nuklai-cli action delegate-user-stake manual
     sleep 5

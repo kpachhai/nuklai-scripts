@@ -1,31 +1,36 @@
 #!/bin/bash
 
 # Arguments
-PRIVATE_KEY=${1:-"Mjsdj07tXw2p2pMHGwNPLc6dLSJpLBcvPLJSpk3fr9AbBX3jICl8Ka0MH1ieohaGnPGTjYjJ+9cNZ0gyPb8vpw=="}
-RECIPIENT=${2:-"nuklai1qq69cgkqp3hf8e3qmx7qxrls909xlelg8mf8fnr8rwjjqptwela45uzqm50"}
-AMOUNT=${3:-"0.00000001"}
+LOCKFILE=${1:-"/tmp/auto_transfer_$(uuidgen).lock"}
+PRIVATE_KEY=${2:-"Mjsdj07tXw2p2pMHGwNPLc6dLSJpLBcvPLJSpk3fr9AbBX3jICl8Ka0MH1ieohaGnPGTjYjJ+9cNZ0gyPb8vpw=="}
+RECIPIENT=${3:-"nuklai1qpg4ecapjymddcde8sfq06dshzpxltqnl47tvfz0hnkesjz7t0p35d5fnr3"}
+AMOUNT=${4:-"0.00000001"}
 
 LOGFILE="/mnt/c/Users/kiran/Downloads/auto_transfer_NAI.log"
-LOCKFILE="/tmp/transfer_and_log.lock"
-TIMEOUT_DURATION="60s"
-CHAIN_ID="h8CqKM4q7Rs2X8CLQPyUQPtMoyDUvr7Hx26cvJnG7parK1oXb"
+TIMEOUT_DURATION="30s"
+CHAIN_ID="2qUd9HkKRx44ZRi8fbhCBJ3yHG8fVHNuj7ESyPYnf18dNDuEpu"
 
 # List of RPC endpoints
 RPC_URLS=(
-1.1.1.1
+    127.0.0.1
 )
 
-echo "$(date "+%Y-%m-%d %H:%M:%S") - Script started." >> "$LOGFILE"
+log_message() {
+    local message=$1
+    flock -n /tmp/auto_transfer_log.lock -c "echo \"$(date "+%Y-%m-%d %H:%M:%S") - $message\" >> \"$LOGFILE\""
+}
+
+log_message "Script started for $LOCKFILE."
 
 # Check if the lock file exists
 if [ -e "$LOCKFILE" ]; then
-    echo "$(date "+%Y-%m-%d %H:%M:%S") - Script is already running." >> "$LOGFILE"
+    log_message "Script for $LOCKFILE is already running."
     exit 1
 fi
 
 # Create the lock file
 touch "$LOCKFILE"
-echo "$(date "+%Y-%m-%d %H:%M:%S") - Lock file created." >> "$LOGFILE"
+log_message "Lock file $LOCKFILE created."
 
 for RPC_URL in "${RPC_URLS[@]}"; do
     NUKLAI_RPC_URL="http://$RPC_URL:9650/ext/bc/$CHAIN_ID"
@@ -44,13 +49,12 @@ for RPC_URL in "${RPC_URLS[@]}"; do
     fi
 
     # Log the transaction details
-    echo "$TIMESTAMP - Block Height with $RPC_URL: $CURRENT_BLOCK_HEIGHT - Transferring $AMOUNT to $RECIPIENT using RPC URL $NUKLAI_RPC_URL" >> "$LOGFILE"
-    echo "$TIMESTAMP - Command Output: $COMMAND_OUTPUT" >> "$LOGFILE"
+    log_message "Block Height with $RPC_URL: $CURRENT_BLOCK_HEIGHT - $COMMAND_OUTPUT To Recipient: $RECIPIENT"
 
-    # Sleep for 10 seconds before the next execution
-    sleep 10s
+    # Sleep for 30 seconds before the next execution
+    sleep 30s
 done
 
 # Remove the lock file
 rm -f "$LOCKFILE"
-echo "$(date "+%Y-%m-%d %H:%M:%S") - Lock file removed." >> "$LOGFILE"
+log_message "Lock file removed."

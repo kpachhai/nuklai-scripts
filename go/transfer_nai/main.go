@@ -85,7 +85,7 @@ func transfer(ctx context.Context, cli *rpc.JSONRPCClient, ncli *nrpc.JSONRPCCli
 
 	// Get asset ID
 	assetID := ids.Empty // Assuming NAI is the native asset
-	_, _, decimals, _, _, _, err := ncli.Asset(ctx, assetID, true)
+	_, _, decimals, _, _, _, err := ncli.Asset(ctx, assetID.String(), true)
 	if err != nil {
 		return fmt.Errorf("failed to get asset info: %w", err)
 	}
@@ -102,7 +102,7 @@ func transfer(ctx context.Context, cli *rpc.JSONRPCClient, ncli *nrpc.JSONRPCCli
 	senderAddrStr := codec.MustAddressBech32(nconsts.HRP, senderAddr)
 
 	// Ensure sufficient balance for transfer
-	sendBal, err := ncli.Balance(ctx, senderAddrStr, assetID)
+	sendBal, err := ncli.Balance(ctx, senderAddrStr, assetID.String())
 	if err != nil {
 		return fmt.Errorf("failed to get balance: %w", err)
 	}
@@ -111,7 +111,7 @@ func transfer(ctx context.Context, cli *rpc.JSONRPCClient, ncli *nrpc.JSONRPCCli
 	}
 
 	// Ensure sufficient balance for fees
-	bal, err := ncli.Balance(ctx, senderAddrStr, ids.Empty)
+	bal, err := ncli.Balance(ctx, senderAddrStr, ids.Empty.String())
 	if err != nil {
 		return fmt.Errorf("failed to get balance: %w", err)
 	}

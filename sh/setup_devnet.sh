@@ -5,7 +5,7 @@
 rm -rf .nuklai-cli
 
 TMPDIR=/tmp/nuklaivm-deploy
-CLUSTER=nuklai-1718726898
+CLUSTER=nuklai-1719454943
 
 # Import cli
 $TMPDIR/nuklai-cli chain import-cli $HOME/.avalanche-cli/nodes/inventories/$CLUSTER/clusterInfo.yaml
@@ -30,8 +30,7 @@ $TMPDIR/nuklai-cli key set
 # Transfer some NAI to the validators
 # Make sure to send to:
 # nuklai1qqfvz93mskscgfh4lgp0wwhwtj8umzzqhytew028fgg9wy390maxy02pwkw (auto_transfer.sh main account)
-# nuklai1qqnrqnhe399wlzn8qmsk2svmpwtp8je86yjnnr9p0qzusvljv9lakqgzxxc (auto_transfer second account)
-# nuklai1qfgc2st57mmtzet7ajq4lh6d6rp3ev277ejxpandlzzy35v5fnhf6ccx39e  (sdk account)
+# nuklai1qrzvk4zlwj9zsacqgtufx7zvapd3quufqpxk5rsdd4633m4wz2fdjss0gwx  (sdk account)
 for i in {1..3}; do
     echo "Executing transfer action $i"
     $TMPDIR/nuklai-cli action transfer

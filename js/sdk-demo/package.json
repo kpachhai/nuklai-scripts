@@ -1,0 +1,13 @@
+{
+  "name": "sdk-demo",
+  "version": "1.0.0",
+  "main": "transaction.js",
+  "license": "MIT",
+  "type": "module",
+  "scripts": {
+    "test-transaction": "node transaction.js"
+  },
+  "dependencies": {
+    "@nuklai/hyperchain-sdk": "https://github.com/nuklai/hyperchain-js-sdk#3db227f"
+  }
+}

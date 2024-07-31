@@ -6,7 +6,6 @@ import os
 def send_email(recipient, subject, body):
     # Load environment variables from .env file
     dotenv_path = os.path.join(os.path.dirname(__file__), '.env')
-    print("Loading environment variables from:", dotenv_path)
 
     if not os.path.exists(dotenv_path):
         raise FileNotFoundError(f".env file not found at path: {dotenv_path}")
@@ -18,10 +17,6 @@ def send_email(recipient, subject, body):
 
     if not aws_access_key_id or not aws_secret_access_key:
         raise ValueError("AWS_ACCESS_KEY_ID and AWS_SECRET_ACCESS_KEY must be set in the .env file")
-
-    # Print the loaded keys for debugging purposes
-    print("Loaded AWS_ACCESS_KEY_ID:", aws_access_key_id)
-    print("Loaded AWS_SECRET_ACCESS_KEY:", aws_secret_access_key)
 
     ses_client = boto3.client(
         'ses',

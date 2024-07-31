@@ -14,7 +14,7 @@ SSH_USER="ubuntu"
 
 # List of RPC endpoints
 RPC_URLS=(
-"api-devnet.nuklaivm-dev.net"
+  "api-devnet.nuklaivm-dev.net"
 )
 
 # Array to track block heights
@@ -25,13 +25,18 @@ log_message() {
     flock -n /tmp/auto_transfer_log.lock -c "echo \"$(date "+%Y-%m-%d %H:%M:%S") - $message\" >> \"$LOGFILE\""
 }
 
-handle_timeout() {
+send_email() {
     local rpc_url=$1
-    log_message "Fixing the timeout issue for $rpc_url by restarting the node"
+    local message=$2
+    local subject="Possible devnet stall for $rpc_url"
+    local recipient="kiran@pachhai.com"
+
+    log_message "Sending email to $recipient with subject: $subject"
+    ../py/venv/bin/python ../py/send_email.py "$recipient" "$subject" "$message"
+
     # ssh -o IdentitiesOnly=yes -o StrictHostKeyChecking=no "$SSH_USER@$rpc_url" -i "$SSH_KEY" << 'EOF'
-     #   sudo systemctl stop avalanche-cli-docker; sudo rm -rf ~/.avalanchego/chainData ~/.avalanchego/db; sudo systemctl restart avalanche-cli-docker; sudo systemctl restart avalanche-cli-docker; sudo systemctl restart avalanche-cli-docker;
-     # TODO: Email kiran.pachhai@nukl.ai
-EOF
+    #    sudo systemctl stop avalanche-cli-docker; sudo rm -rf ~/.avalanchego/chainData ~/.avalanchego/db; sudo systemctl restart avalanche-cli-docker; sudo systemctl restart avalanche-cli-docker; sudo systemctl restart avalanche-cli-docker;
+    # EOF
     log_message "Timeout handling completed for $rpc_url"
 }
 
@@ -54,9 +59,6 @@ fi
 # Create the lock file
 touch "$LOCKFILE"
 log_message "Lock file $LOCKFILE created."
-
-# Flag to track if node stalled has been handled
-node_stalled_handled=false
 
 for RPC_URL in "${RPC_URLS[@]}"; do
     NUKLAI_RPC_URL="http://$RPC_URL:9650/ext/bc/$CHAIN_ID"
@@ -84,18 +86,11 @@ for RPC_URL in "${RPC_URLS[@]}"; do
     if [ "$RPC_URL" != "api-devnet.nuklaivm-dev.net" ]; then
         for prev_url in "${!block_heights[@]}"; do
             if [ "$RPC_URL" != "$prev_url" ] && [ "$CURRENT_BLOCK_HEIGHT" -lt "${block_heights[$prev_url]}" ]; then
-                log_message "Block height for $RPC_URL ($CURRENT_BLOCK_HEIGHT) is lower than $prev_url (${block_heights[$prev_url]}). Triggering timeout handling."
+                message="Block height for $RPC_URL ($CURRENT_BLOCK_HEIGHT) is lower than $prev_url (${block_heights[$prev_url]})."
+                log_message "${message}. Triggering timeout handling."
                 COMMAND_OUTPUT="Command timed out or failed after $TIMEOUT_DURATION"
                 log_message "$COMMAND_OUTPUT"
-
-                # Timeout handling only once
-                if [ "$node_stalled_handled" = false ]; then
-                    handle_timeout "$RPC_URL"
-                    node_stalled_handled=true
-                else
-                    log_message "Node stalled occurred, but handling already done. Skipping $RPC_URL."
-                fi
-                break  # No need to check other URLs
+                send_email "$RPC_URL" "$message"
             fi
         done
     fi

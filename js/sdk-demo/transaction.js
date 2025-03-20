@@ -16,7 +16,7 @@ const DEFAULT_NUKLAI_RPC_URL = 'https://api-devnet.nuklaivm-dev.net:9650'
 const DEFAULT_RECIPIENT =
   'nuklai1qpg4ecapjymddcde8sfq06dshzpxltqnl47tvfz0hnkesjz7t0p35d5fnr3'
 const DEFAULT_AMOUNT = '0.00000001'
-const CHAIN_ID = 'JopL8T69GBW1orW4ZkJ1TBRzF97KXaY8e64atDA1v2M12SNqm'
+const CHAIN_ID = '24h7hzFfHG2vCXtT1MKsxP1VkYb9kkKHAvhJim1Xb7Y6W15zY5'
 
 const PRIVATE_KEY = process.argv[2] || DEFAULT_PRIVATE_KEY
 const NUKLAI_RPC_URL = process.argv[3] || DEFAULT_NUKLAI_RPC_URL

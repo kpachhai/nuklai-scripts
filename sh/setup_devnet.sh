@@ -5,7 +5,7 @@
 rm -rf .nuklai-cli
 
 TMPDIR=/tmp/nuklaivm-deploy
-CLUSTER=nuklai-1722025254
+CLUSTER=nuklai-1725893951
 
 # Import cli
 $TMPDIR/nuklai-cli chain import-cli $HOME/.avalanche-cli/nodes/inventories/$CLUSTER/clusterInfo.yaml
